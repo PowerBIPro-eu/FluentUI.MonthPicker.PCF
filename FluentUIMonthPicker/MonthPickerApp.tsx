@@ -17,6 +17,7 @@ export const useStyles = makeStyles({
 export interface IMonthPickerProps {
     instanceId: string
     dateValue: Date | undefined
+    dateBehavior: 'userLocal' | 'timezoneIndependent' | 'dateOnly' | undefined;
     minDateValue: Date | undefined
     maxDateValue: Date | undefined
     monthDisplayFormat: Intl.DateTimeFormatOptions["month"]
@@ -54,9 +55,15 @@ const MonthPickerApp = (props:IMonthPickerProps): JSX.Element => {
       if (props.dateValue === undefined) {
         return props.dateValue;
       }
+
+      let newDateTime = props.dateValue.getTime();
+
+      // Adjust by the timezone offset
+      if(props.dateBehavior === 'userLocal') {
+        newDateTime += timezoneOffsetMilliseconds;
+      }
       
-      // Create a new date object that is adjusted by the timezone offset
-      return new Date(props.dateValue.getTime() + timezoneOffsetMilliseconds);
+      return new Date(newDateTime);
     });
 
     const inputRef = useRef<HTMLInputElement>(null);
@@ -131,8 +138,8 @@ const MonthPickerApp = (props:IMonthPickerProps): JSX.Element => {
                 highlightSelectedMonth
                 isDayPickerVisible={false}
                 onSelectDate={onSelectMonth}
-                minDate={props.minDateValue ? new Date(props.minDateValue.getTime() + timezoneOffsetMilliseconds) : undefined}
-                maxDate={props.maxDateValue ? new Date(props.maxDateValue.getTime() + timezoneOffsetMilliseconds) : undefined}
+                minDate={props.minDateValue ? new Date(props.minDateValue.getTime() + (props.dateBehavior === 'userLocal' ? timezoneOffsetMilliseconds : 0)) : undefined}
+                maxDate={props.maxDateValue ? new Date(props.maxDateValue.getTime() + (props.dateBehavior === 'userLocal' ? timezoneOffsetMilliseconds : 0)) : undefined}
                 value={selectedDate}
               />
             </PopoverSurface>
