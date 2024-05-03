@@ -19,6 +19,7 @@ export class FluentUIMonthPicker implements ComponentFramework.StandardControl<I
     private _props: IMonthPickerProps = {
         instanceId: uuidv4(),
         dateValue: undefined,
+        dateBehavior: undefined,
         minDateValue: undefined,
         maxDateValue: undefined,
         isDarkMode: false,
@@ -119,6 +120,23 @@ export class FluentUIMonthPicker implements ComponentFramework.StandardControl<I
             default:
                 this._props.yearDisplayFormat = "numeric";
                 break;
+        }
+
+        switch (context.parameters.startDate.attributes?.Behavior) {
+            case 1:
+                this._props.dateBehavior = "userLocal";
+                break;
+            case 2:
+                this._props.dateBehavior = "dateOnly";
+                break;
+            case 3:
+                this._props.dateBehavior = "timezoneIndependent";
+                break;
+                
+                
+            default:
+                this._props.dateBehavior = "dateOnly";
+                break;    
         }
 
         this._props.localeDisplayFormat = (context.userSettings as any).locale ?? "fr-CA";
