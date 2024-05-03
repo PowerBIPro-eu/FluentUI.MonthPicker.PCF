@@ -106,7 +106,7 @@ const MonthPickerApp = (props:IMonthPickerProps): JSX.Element => {
         
       <IdPrefixProvider value={`month-picker-${props.instanceId}-`}>
         <FluentProvider theme={props.isDarkMode ? webDarkTheme : webLightTheme} >
-          <Popover positioning={{ positioningRef }} open={open} onOpenChange={handleOpenChange}>
+          <Popover positioning={{ positioningRef }} open={props.disabled ? false : open} onOpenChange={handleOpenChange}>
             <PopoverTrigger disableButtonEnhancement>
               <Input
                   className={styles.root}
